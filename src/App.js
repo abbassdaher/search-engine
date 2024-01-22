@@ -3,7 +3,8 @@ import React, { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 
 function App() {
-  const [term, setTerm] = useState('');
+  const [term, setTerm] = useState("");
+  const [result, setresult] = useState([]);
   // const [state, setstate] = useState("");
   // const getTermHandler = (term) => {
   //   if (term)
@@ -35,14 +36,26 @@ function App() {
           format: "json",
           origin: "*",
           srlimit: 20,
-          srsearch: term
-        }
-        
+          srsearch: term,
+        },
       });
-      
+      setresult(respond.data.query.search);
+      // console.log();
     };
-    search()
+    if (term) search();
+  }, [term]);
+  const fetchData = result.map((el) => {
+    return (
+      <tr key={el.pageid}>
+        <td scope="row">{el.pageid}</td>
+        <td scope="row">{el.title}</td>
+        <td scope="row">
+          <span dangerouslySetInnerHTML={{ __html: el.snippet }} />
+        </td>
+      </tr>
+    );
   });
+
   return (
     <Fragment>
       <input
@@ -50,37 +63,19 @@ function App() {
         className="form-control m-3"
         id="exampleInputEmail1"
         placeholder="search..."
-        onChange={(e)=>setTerm(e.target.value)}
+        onChange={(e) => setTerm(e.target.value)}
         value={term}
       />
       <table className="table">
         <thead>
           <tr>
             <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
+            <th scope="col">title</th>
+            <th scope="col">desc</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>Larry</td>
-            <td>the Bird</td>
-            <td>@twitter</td>
-          </tr>
+          <tr>{fetchData}</tr>
         </tbody>
       </table>
     </Fragment>
