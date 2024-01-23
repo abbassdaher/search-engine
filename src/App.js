@@ -42,8 +42,18 @@ function App() {
       setresult(respond.data.query.search);
       // console.log();
     };
-    if (term) search();
+    /* The `debounceSearch` constant is using the `setTimeout` function to delay the execution of the
+    `search` function by 1000 milliseconds (1 second). It is used to implement a debounce
+    functionality, which means that the `search` function will only be called after the user has
+    stopped typing for 1 second.*/
+    const debounceSearch = setTimeout(() => {
+      if (term) {
+        search();
+      }
+    }, 1000);
+    return () => clearTimeout(debounceSearch);
   }, [term]);
+
   const fetchData = result.map((el) => {
     return (
       <tr key={el.pageid}>
